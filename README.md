@@ -1,6 +1,15 @@
-# Tech News - Flutter App
+# Briefly - Tech News Flutter App
 
-A Flutter application that displays tech news summaries from the last 24 hours, built as part of the **Gemini API for Flutter Developers** workshop conducted at **Road to DevFest 2025**.
+### 👥 Group Members
+| Roll Number | 
+|-------------|
+| 22K-4166    |
+| 22K-4218    |
+| 22K-4184    |
+
+---
+
+A Flutter application that displays tech news summaries powered by the **Gemini API**, built as part of the **Gemini API for Flutter Developers** workshop conducted at **Road to DevFest 2025**.
 
 ## 📱 Screenshots
 
@@ -32,12 +41,26 @@ lib/
 
 ## 🚀 Features
 
-- ✅ Fetch tech news summaries from the last 24 hours
+- ✅ Fetch tech news summaries powered by Gemini AI
 - ✅ Clean BLoC architecture implementation
 - ✅ Pull-to-refresh functionality
 - ✅ Share Daily Brief bottom sheet UI
 - ✅ Dark theme with modern UI design
 - ⏳ Email sharing functionality (homework assignment)
+
+## ⚙️ Setup
+
+1. Clone the repo
+2. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+3. Add your Gemini API key to `.env`:
+   ```
+   GEMINI_API_KEY=your_key_here
+   ```
+4. Run `flutter pub get`
+5. Run the app!
 
 ## 📝 Workshop Homework Assignment
 

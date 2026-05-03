@@ -1,23 +1,30 @@
-import 'package:http/http.dart' as http;
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 import '../models/news_item.dart';
 
 class NewsRemoteDataSource {
-  final http.Client client;
+  final GenerativeModel _model;
 
-  NewsRemoteDataSource({http.Client? client}) : client = client ?? http.Client();
-
-  static const _baseUrl =
-      'https://news-curator-3494615909.us-central1.run.app/news';
+  NewsRemoteDataSource({required String apiKey})
+    : _model = GenerativeModel(model: 'gemini-2.0-flash-lite', apiKey: apiKey);
 
   Future<List<NewsItem>> fetchNews() async {
-    final response = await client.get(Uri.parse(_baseUrl));
+    const prompt = '''
+Give me 8 of the latest and most important tech news headlines from today.
+For each news item, format it exactly like this:
+**Headline here** Brief one or two sentence summary of the story.
 
-    if (response.statusCode == 200) {
-      return _parseNews(response.body);
-    } else {
-      throw Exception('Failed to load news (${response.statusCode})');
+Only output the news items in that format, nothing else.
+''';
+
+    final response = await _model.generateContent([Content.text(prompt)]);
+    final rawText = response.text ?? '';
+
+    if (rawText.isEmpty) {
+      throw Exception('Gemini returned an empty response.');
     }
+
+    return _parseNews(rawText);
   }
 
   List<NewsItem> _parseNews(String rawText) {
@@ -39,9 +46,7 @@ class NewsRemoteDataSource {
           news.add(
             NewsItem(
               headline: headline,
-              body: body.isEmpty
-                  ? 'Read more about this tech trend.'
-                  : body,
+              body: body.isEmpty ? 'Read more about this tech trend.' : body,
             ),
           );
         }
@@ -51,5 +56,3 @@ class NewsRemoteDataSource {
     return news;
   }
 }
-
-

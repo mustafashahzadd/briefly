@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'bloc/news_bloc.dart';
 import 'data/datasources/news_remote_data_source.dart';
 import 'data/repositories/news_repository.dart';
 import 'presentation/screens/news_screen.dart';
 
-void main() {
-  final repository = NewsRepository(remoteDataSource: NewsRemoteDataSource());
+Future<void> main() async {
+  await dotenv.load(fileName: '.env');
+  final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
+
+  final repository = NewsRepository(
+    remoteDataSource: NewsRemoteDataSource(apiKey: apiKey),
+  );
 
   runApp(NewsApp(repository: repository));
 }
@@ -37,9 +43,7 @@ class NewsApp extends StatelessWidget {
               foregroundColor: WidgetStateProperty.all(Colors.white),
             ),
           ),
-          chipTheme: ChipThemeData(
-            labelStyle: TextStyle(color: Colors.white)
-          ),
+          chipTheme: ChipThemeData(labelStyle: TextStyle(color: Colors.white)),
           scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 21),
         ),
         home: const NewsScreen(),
